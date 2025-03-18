@@ -9,5 +9,5 @@ export default function ListPage() {
     onSuccess: (data) => console.log(data),
   });
 
-  return <div>this is the list page</div>;
+  return <div>this is the list fpage</div>;
 }
