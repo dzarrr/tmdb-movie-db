@@ -6,7 +6,11 @@ import { useNavigate } from "react-router";
 
 import ErrorResult from "./component/ErrorResult";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
+
+const StyledLayout = styled(Layout)`
+  min-height: 100vh;
+`;
 
 const StyledContent = styled(Content)`
   background-color: var(--blue-light-cyan);
@@ -53,13 +57,7 @@ function AppLayout() {
   const navigate = useNavigate();
 
   return (
-    <Layout
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
+    <StyledLayout>
       <StyledHeader>
         <HeaderLogoWrapper onClick={() => navigate("/")}>
           <HeaderText>TMDB</HeaderText>
@@ -70,8 +68,7 @@ function AppLayout() {
           <Outlet />
         </ErrorBoundary>
       </StyledContent>
-      <Footer style={{ textAlign: "center" }}>Pancoran@2025</Footer>
-    </Layout>
+    </StyledLayout>
   );
 }
 

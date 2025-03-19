@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRequest } from "ahooks";
-import { Skeleton, Pagination, Input } from "antd";
+import { Skeleton, Pagination, Input, notification } from "antd";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import ListItem from "../List/component/ListItem";
 import { getMovies } from "../../services/movieService";
+import ErrorResult from "../../component/ErrorResult";
 import { TMDB_MAX_ITEM_PER_PAGE, TMDB_MAX_PAGE } from "../../lib/const";
 
 const { Search } = Input;
@@ -82,8 +83,10 @@ const PaginationContainer = styled.div`
 `;
 
 export default function ListPage() {
+  const [notiApi, notiContextHolder] = notification.useNotification();
   const [category, setCategory] = useState<string | null>(null);
   const [searchText, setSearchText] = useState<string>("");
+  const [showErrorPage, setShowErrorPage] = useState(false);
   const navigate = useNavigate();
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -97,7 +100,14 @@ export default function ListPage() {
         page: pagination.currentPage,
       }),
     {
-      onSuccess: (data) => console.log(data),
+      onError: (e) => {
+        notiApi.open({
+          type: "error",
+          message: e?.message,
+          placement: "topRight",
+        });
+        setShowErrorPage(true);
+      },
       refreshDeps: [pagination],
     }
   );
@@ -149,15 +159,17 @@ export default function ListPage() {
 
   return (
     <div>
-      <StyledSearch
-        placeholder="Find your favorite movie..."
-        enterButton="Search"
-        size="large"
-        loading={loading}
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        onSearch={handleSearchSubmit}
-      />
+      {!showErrorPage && (
+        <StyledSearch
+          placeholder="Find your favorite movie..."
+          enterButton="Search"
+          size="large"
+          loading={loading}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onSearch={handleSearchSubmit}
+        />
+      )}
       <CategoryContainer>
         <CategoryButton
           data-active={category === "now_playing"}
@@ -185,34 +197,39 @@ export default function ListPage() {
         </CategoryButton>
       </CategoryContainer>
       <ListContainer>
+        {notiContextHolder}
         {loading && <Skeleton />}
+        {showErrorPage && <ErrorResult />}
         {!loading &&
+          !showErrorPage &&
           movieData?.results?.map((movie) => (
             <ListItem key={movie.id} movieData={movie} />
           ))}
       </ListContainer>
-      <PaginationContainer
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "4em",
-        }}
-      >
-        {movieData && movieData?.results.length > 0 && !loading && (
-          <Pagination
-            simple
-            showSizeChanger={false}
-            current={pagination.currentPage}
-            onChange={handlePageChange}
-            pageSize={TMDB_MAX_ITEM_PER_PAGE}
-            total={
-              movieData.total_results / TMDB_MAX_ITEM_PER_PAGE > TMDB_MAX_PAGE
-                ? TMDB_MAX_PAGE * TMDB_MAX_ITEM_PER_PAGE
-                : movieData.total_results
-            }
-          />
-        )}
-      </PaginationContainer>
+      {!showErrorPage && (
+        <PaginationContainer
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "4em",
+          }}
+        >
+          {movieData && movieData?.results.length > 0 && !loading && (
+            <Pagination
+              simple
+              showSizeChanger={false}
+              current={pagination.currentPage}
+              onChange={handlePageChange}
+              pageSize={TMDB_MAX_ITEM_PER_PAGE}
+              total={
+                movieData.total_results / TMDB_MAX_ITEM_PER_PAGE > TMDB_MAX_PAGE
+                  ? TMDB_MAX_PAGE * TMDB_MAX_ITEM_PER_PAGE
+                  : movieData.total_results
+              }
+            />
+          )}
+        </PaginationContainer>
+      )}
     </div>
   );
 }

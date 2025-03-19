@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 
 const StyledButton = styled(Button)`
-  background-color: #eb2f96;
+  background-color: var(--blue-accent);
   color: white;
 `;
 
