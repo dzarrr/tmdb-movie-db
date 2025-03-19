@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
 import { useRequest } from "ahooks";
-import { Button } from "antd";
+import { Button, Skeleton } from "antd";
 import { useNavigate } from "react-router";
+import { styled } from "styled-components";
+import ListItem from "../List/component/ListItem";
 import { getMovies } from "../../services/movieService";
+
+const ListContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minMax(20em, auto));
+  gap: 2.5em;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minMax(10em, auto));
+    gap: 1em;
+  }
+`;
 
 export default function ListPage() {
   const [category, setCategory] = useState<string>("");
@@ -63,6 +76,12 @@ export default function ListPage() {
           Upcoming
         </Button>
       </div>
+      <ListContainer>
+        {loading && <Skeleton />}
+        {movieData?.results?.map((movie) => (
+          <ListItem key={movie.id} movieData={movie} />
+        ))}
+      </ListContainer>
     </div>
   );
 }
