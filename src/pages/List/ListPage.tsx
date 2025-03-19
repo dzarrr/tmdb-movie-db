@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRequest } from "ahooks";
-import { Button, Skeleton, Pagination } from "antd";
+import { Button, Skeleton, Pagination, Input } from "antd";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import ListItem from "../List/component/ListItem";
 import { getMovies } from "../../services/movieService";
+import { TMDB_MAX_ITEM_PER_PAGE, TMDB_MAX_PAGE } from "../../lib/const";
 
+const { Search } = Input;
 const ListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minMax(20em, auto));
@@ -14,6 +16,19 @@ const ListContainer = styled.div`
   @media (max-width: 480px) {
     grid-template-columns: repeat(auto-fit, minMax(10em, auto));
     gap: 1em;
+  }
+`;
+
+const StyledSearch = styled(Search)`
+  margin-bottom: 2.5em;
+
+  .ant-btn {
+    background-color: var(--blue-accent);
+
+    &:hover {
+      background-color: var(--blue-accent) !important;
+      filter: brightness(1.25);
+    }
   }
 `;
 
@@ -29,7 +44,8 @@ const PaginationContainer = styled.div`
 `;
 
 export default function ListPage() {
-  const [category, setCategory] = useState<string>("");
+  const [category, setCategory] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState<string>("");
   const navigate = useNavigate();
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -38,7 +54,8 @@ export default function ListPage() {
   const { data: movieData, loading } = useRequest(
     () =>
       getMovies({
-        category,
+        ...(category && { category }),
+        query: searchText,
         page: pagination.currentPage,
       }),
     {
@@ -53,8 +70,7 @@ export default function ListPage() {
   function handleCategoryBtnClick(
     category: "top_rated" | "now_playing" | "popular" | "upcoming"
   ) {
-    const currentParams = new URLSearchParams(location.search);
-
+    const currentParams = new URLSearchParams();
     currentParams.set("category", category);
     currentParams.set("page", "1");
 
@@ -65,6 +81,17 @@ export default function ListPage() {
     const currentParams = new URLSearchParams(location.search);
 
     currentParams.set("page", newPage.toString());
+
+    navigate(`?${currentParams.toString()}`);
+  }
+
+  function handleSearchSubmit(searchQuery: string) {
+    const currentParams = new URLSearchParams();
+
+    currentParams.set("query", searchQuery);
+    currentParams.set("page", "1");
+
+    console.log(currentParams.toString());
 
     navigate(`?${currentParams.toString()}`);
   }
@@ -80,11 +107,22 @@ export default function ListPage() {
 
     if (categoryFromQueryParam) {
       setCategory(categoryFromQueryParam);
+    } else {
+      setCategory(null);
     }
   }, [location.search]);
 
   return (
     <div>
+      <StyledSearch
+        placeholder="Find your favorite anime..."
+        enterButton="Search"
+        size="large"
+        loading={loading}
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        onSearch={handleSearchSubmit}
+      />
       <div>
         <Button onClick={(e) => handleCategoryBtnClick("now_playing")}>
           Now Playing
@@ -119,7 +157,12 @@ export default function ListPage() {
             showSizeChanger={false}
             current={pagination.currentPage}
             onChange={handlePageChange}
-            total={movieData.total_results}
+            pageSize={TMDB_MAX_ITEM_PER_PAGE}
+            total={
+              movieData.total_results / TMDB_MAX_ITEM_PER_PAGE > TMDB_MAX_PAGE
+                ? TMDB_MAX_PAGE * TMDB_MAX_ITEM_PER_PAGE
+                : movieData.total_results
+            }
           />
         )}
       </PaginationContainer>
