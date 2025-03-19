@@ -60,8 +60,6 @@ export default function ListPage() {
 
   return (
     <div>
-      {"this is the list fpage"}
-      <span>{loading && "loading..."}</span>
       <div>
         <Button onClick={(e) => handleCategoryBtnClick("now_playing")}>
           Now Playing

@@ -30,7 +30,7 @@ const StyledCard = styled(Card)`
 
 const Title = styled.h3`
   text-decoration: underline;
-  text-decoration-color: #eb2f96;
+  text-decoration-color: var(--blue-accent);
   text-decoration-thickness: 3px;
   font-size: 20px;
   font-weight: bold;
