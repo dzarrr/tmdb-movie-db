@@ -48,7 +48,9 @@ const RightSection = styled.div`
   flex-grow: 1;
 `;
 
-const Synopsis = styled.div``;
+const Synopsis = styled.div`
+  margin-top: 10px;
+`;
 
 const Score = styled.div`
   font-size: 24px;
@@ -126,6 +128,7 @@ export default function DetailPage() {
                 <Score>
                   <b>{movieData.vote_average.toFixed(2)}</b> / 10
                 </Score>
+                <em>{movieData.tagline}</em>
                 <Synopsis>
                   <div
                     style={{

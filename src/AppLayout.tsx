@@ -8,7 +8,9 @@ import ErrorResult from "./component/ErrorResult";
 
 const { Header, Content } = Layout;
 
-const StyledLayout = styled(Layout)``;
+const StyledLayout = styled(Layout)`
+  min-height: 100vh;
+`;
 
 const StyledContent = styled(Content)`
   background-color: var(--blue-light-cyan);
