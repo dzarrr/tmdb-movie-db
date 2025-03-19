@@ -19,6 +19,25 @@ const ListContainer = styled.div`
   }
 `;
 
+const CategoryContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  margin-bottom: 25px;
+  padding: 10px 0;
+
+  @media (max-width: 480px) {
+    width: 300px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+`;
+
+const CategoryHeader = styled.h3`
+  margin: 0;
+`;
+
 const StyledSearch = styled(Search)`
   margin-bottom: 2.5em;
 
@@ -29,6 +48,29 @@ const StyledSearch = styled(Search)`
       background-color: var(--blue-accent) !important;
       filter: brightness(1.25);
     }
+  }
+`;
+
+const CategoryButton = styled.button`
+  text-align: left;
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+  background-color: unset;
+  border: unset;
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--blue-accent);
+    text-decoration-thickness: 5px;
+  }
+
+  &[data-active="true"] {
+    text-decoration: underline;
+    text-decoration-color: var(--blue-accent);
+    text-decoration-thickness: 5px;
   }
 `;
 
@@ -115,7 +157,7 @@ export default function ListPage() {
   return (
     <div>
       <StyledSearch
-        placeholder="Find your favorite anime..."
+        placeholder="Find your favorite movie..."
         enterButton="Search"
         size="large"
         loading={loading}
@@ -123,20 +165,32 @@ export default function ListPage() {
         onChange={(e) => setSearchText(e.target.value)}
         onSearch={handleSearchSubmit}
       />
-      <div>
-        <Button onClick={(e) => handleCategoryBtnClick("now_playing")}>
+      <CategoryContainer>
+        <CategoryButton
+          data-active={category === "now_playing"}
+          onClick={(e) => handleCategoryBtnClick("now_playing")}
+        >
           Now Playing
-        </Button>
-        <Button onClick={(e) => handleCategoryBtnClick("popular")}>
+        </CategoryButton>
+        <CategoryButton
+          data-active={category === "popular"}
+          onClick={(e) => handleCategoryBtnClick("popular")}
+        >
           Popular
-        </Button>
-        <Button onClick={(e) => handleCategoryBtnClick("top_rated")}>
+        </CategoryButton>
+        <CategoryButton
+          data-active={category === "top_rated"}
+          onClick={(e) => handleCategoryBtnClick("top_rated")}
+        >
           Top Rated
-        </Button>
-        <Button onClick={(e) => handleCategoryBtnClick("upcoming")}>
+        </CategoryButton>
+        <CategoryButton
+          data-active={category === "upcoming"}
+          onClick={(e) => handleCategoryBtnClick("upcoming")}
+        >
           Upcoming
-        </Button>
-      </div>
+        </CategoryButton>
+      </CategoryContainer>
       <ListContainer>
         {loading && <Skeleton />}
         {!loading &&

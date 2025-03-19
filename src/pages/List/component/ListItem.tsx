@@ -5,6 +5,7 @@ import { Movie as MovieType } from "../../../services/movieService.type";
 
 const StyledCard = styled(Card)`
   max-width: 25em;
+  border-radius: 25px;
 
   @media (max-width: 480px) {
     max-width: 17.5em;
@@ -16,6 +17,7 @@ const StyledCard = styled(Card)`
     flex-direction: column;
     height: 100%;
     font-size: 18px;
+    justify-content: space-between;
 
     @media (max-width: 480px) {
       font-size: 12px;
@@ -41,17 +43,7 @@ const Title = styled.h3`
   }
 `;
 
-const Metadata = styled.p`
-  color: #666;
-  margin: 0.2em 0;
-`;
-
 const Score = styled.span``;
-
-const GenreList = styled.p`
-  color: #888;
-  margin: 0.25em 0;
-`;
 
 export default function ListItem({ movieData }: { movieData: MovieType }) {
   const navigate = useNavigate();
@@ -60,23 +52,20 @@ export default function ListItem({ movieData }: { movieData: MovieType }) {
     <StyledCard
       //   onClick={() => navigate(`detail/${animeData.mal_id}`)}
       hoverable
+      variant={"borderless"}
     >
-      <div style={{ flexBasis: "60%" }}>
+      <div>
         <Image
           preview={false}
           src={`https://image.tmdb.org/t/p/w500${movieData.poster_path}`}
           fallback="https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
         />
       </div>
-      <div style={{ flexBasis: "40%" }}>
+      <div>
         <Title>{movieData.original_title || movieData.original_title}</Title>
-        {/* <Metadata>
-          {animeData.type} | {animeData.episodes ?? "?"} episodes
-        </Metadata> */}
         <Score>
-          <b>{movieData.vote_average}</b> / 10
+          <b>{movieData.vote_average.toFixed(2)}</b> / 10
         </Score>
-        {/* <GenreList>{animeData.genres.map((g) => g.name).join(", ")}</GenreList> */}
       </div>
     </StyledCard>
   );

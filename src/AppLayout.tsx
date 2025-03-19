@@ -9,6 +9,7 @@ import ErrorResult from "./component/ErrorResult";
 const { Header, Content, Footer } = Layout;
 
 const StyledContent = styled(Content)`
+  background-color: var(--blue-light-cyan);
   padding: 3em 5em;
 
   @media (max-width: 480px) {
@@ -41,8 +42,6 @@ const HeaderText = styled.div`
     font-size: 18px;
   }
 `;
-
-const HeaderImage = styled.img``;
 
 const HeaderLogoWrapper = styled.div`
   display: flex;
