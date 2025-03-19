@@ -4,13 +4,18 @@ import { getQueryParamString } from "../lib/getQueryParamString";
 import { GetMovieResponse } from "./movieService.type";
 
 export function getMovies(
-  params?: Record<string, string | number>
+  params: Record<string, string | number>
 ): Promise<GetMovieResponse> {
-  // TODO: add logic to handle search
+  const { category } = params;
+  delete params["category"];
+
+  // TODO: fix this api logic lol
   let url = `${TMDB_API_ENDPOINT}/movie/now_playing`;
 
-  if (params?.category !== "") {
-    url = `${TMDB_API_ENDPOINT}/movie/${params?.category}`;
+  if (category !== "") {
+    url = `${TMDB_API_ENDPOINT}/movie/${category}?${getQueryParamString(
+      params
+    )}`;
   }
 
   return fetchData(url, {
