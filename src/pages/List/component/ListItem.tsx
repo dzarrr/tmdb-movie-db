@@ -50,7 +50,7 @@ export default function ListItem({ movieData }: { movieData: MovieType }) {
 
   return (
     <StyledCard
-      //   onClick={() => navigate(`detail/${animeData.mal_id}`)}
+      onClick={() => navigate(`detail/${movieData.id}`)}
       hoverable
       variant={"borderless"}
     >

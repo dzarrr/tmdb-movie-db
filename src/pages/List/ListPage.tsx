@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRequest } from "ahooks";
-import { Button, Skeleton, Pagination, Input } from "antd";
+import { Skeleton, Pagination, Input } from "antd";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import ListItem from "../List/component/ListItem";
@@ -32,10 +32,6 @@ const CategoryContainer = styled.div`
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-`;
-
-const CategoryHeader = styled.h3`
-  margin: 0;
 `;
 
 const StyledSearch = styled(Search)`
@@ -101,9 +97,6 @@ export default function ListPage() {
         page: pagination.currentPage,
       }),
     {
-      onError: (e) => {
-        alert(e);
-      },
       onSuccess: (data) => console.log(data),
       refreshDeps: [pagination],
     }
@@ -168,25 +161,25 @@ export default function ListPage() {
       <CategoryContainer>
         <CategoryButton
           data-active={category === "now_playing"}
-          onClick={(e) => handleCategoryBtnClick("now_playing")}
+          onClick={() => handleCategoryBtnClick("now_playing")}
         >
           Now Playing
         </CategoryButton>
         <CategoryButton
           data-active={category === "popular"}
-          onClick={(e) => handleCategoryBtnClick("popular")}
+          onClick={() => handleCategoryBtnClick("popular")}
         >
           Popular
         </CategoryButton>
         <CategoryButton
           data-active={category === "top_rated"}
-          onClick={(e) => handleCategoryBtnClick("top_rated")}
+          onClick={() => handleCategoryBtnClick("top_rated")}
         >
           Top Rated
         </CategoryButton>
         <CategoryButton
           data-active={category === "upcoming"}
-          onClick={(e) => handleCategoryBtnClick("upcoming")}
+          onClick={() => handleCategoryBtnClick("upcoming")}
         >
           Upcoming
         </CategoryButton>
