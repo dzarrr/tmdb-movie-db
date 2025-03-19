@@ -3,12 +3,15 @@ import fetchData from "../lib/fetchData";
 import { getQueryParamString } from "../lib/getQueryParamString";
 import { GetMovieResponse } from "./movieService.type";
 
-export function getPopularMovies(
+export function getMovies(
   params?: Record<string, string | number>
 ): Promise<GetMovieResponse> {
-  const url = params
-    ? `${TMDB_API_ENDPOINT}/movie/now_playing?${getQueryParamString(params)}`
-    : `${TMDB_API_ENDPOINT}/movie/now_playing`;
+  // TODO: add logic to handle search
+  let url = `${TMDB_API_ENDPOINT}/movie/now_playing`;
+
+  if (params?.category !== "") {
+    url = `${TMDB_API_ENDPOINT}/movie/${params?.category}`;
+  }
 
   return fetchData(url, {
     headers: {
